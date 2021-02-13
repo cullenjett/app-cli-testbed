@@ -1,6 +1,7 @@
 {
   "name": "app-cli-testbed",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,5 +9,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/graphql": "^4.6.0"
+  }
 }
