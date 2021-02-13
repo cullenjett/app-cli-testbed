@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@octokit/graphql": "^4.6.0",
+    "@octokit/rest": "^18.1.1",
     "dotenv": "^8.2.0"
   }
 }
