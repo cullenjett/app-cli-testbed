@@ -1,9 +1,9 @@
+import open from 'open';
+
 import {
   createReleasePullRequest,
   createRelease,
   fetchTags,
-  getPullRequests,
-  mergePullRequest,
   isPullRequestMerged,
 } from '../lib/github.js';
 
@@ -12,19 +12,14 @@ export const run = async () => {
   const tag = generateTag(existingTags);
   console.log({ tag });
 
-  const pullNumber = await createReleasePullRequest({
+  const pr = await createReleasePullRequest({
     title: `[Release] ${tag}`,
     body: 'Lorem ipsum',
   });
-  console.log({ pullNumber });
+  console.log({ pr });
+  open(pr.url);
 
-  let isMerged = await isPullRequestMerged(pullNumber);
-  console.log({ isMerged });
-  while (!isMerged) {
-    await wait(2000);
-    isMerged = await isPullRequestMerged(pullNumber);
-    console.log({ isMerged });
-  }
+  await waitForMerge(pr.number);
 
   const release = await createRelease(tag);
   console.log({ release });
@@ -43,6 +38,16 @@ function generateTag(existingTags) {
   }
 
   throw new Error('Unable to generate tag');
+}
+
+async function waitForMerge(pullNumber) {
+  let isMerged = await isPullRequestMerged(pullNumber);
+  console.log({ isMerged });
+  while (!isMerged) {
+    await wait(5000);
+    isMerged = await isPullRequestMerged(pullNumber);
+    console.log({ isMerged });
+  }
 }
 
 function todayString() {
