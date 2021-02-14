@@ -12,14 +12,14 @@ export const run = async () => {
   const tag = generateTag(existingTags);
   console.log({ tag });
 
-  const pr = await createReleasePullRequest({
+  const { url, pullNumber } = await createReleasePullRequest({
     title: `[Release] ${tag}`,
     body: 'Lorem ipsum',
   });
-  console.log({ pr });
-  open(pr.url);
+  console.log({ url, pullNumber });
+  open(url);
 
-  await waitForMerge(pr.number);
+  await waitForMerge(pullNumber);
 
   const release = await createRelease(tag);
   console.log({ release });
