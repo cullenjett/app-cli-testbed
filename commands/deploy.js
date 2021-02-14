@@ -18,7 +18,7 @@ export const run = async () => {
   });
   console.log({ pullNumber });
 
-  let isMerged = await isPullRequestMerged(1);
+  let isMerged = await isPullRequestMerged(pullNumber);
   console.log({ isMerged });
   while (!isMerged) {
     await wait(2000);
@@ -50,7 +50,7 @@ function todayString() {
 
   const year = today.getFullYear();
   const month = padZero(today.getMonth() + 1);
-  const day = padZero(today.getDate() - 1);
+  const day = padZero(today.getDate());
 
   return `${year}.${month}.${day}`;
 }
