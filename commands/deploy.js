@@ -89,5 +89,8 @@ function withLoadingMessage(msg) {
   const spinner = new CliSpinner.Spinner(msg);
   spinner.setSpinnerString(18);
   spinner.start();
-  return () => spinner.stop();
+  return () => {
+    spinner.stop();
+    console.log('');
+  };
 }
