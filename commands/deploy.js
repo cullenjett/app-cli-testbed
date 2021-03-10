@@ -57,11 +57,9 @@ function generateTag(existingTags) {
 
 async function waitForMerge(pullNumber) {
   let isMerged = await isPullRequestMerged(pullNumber);
-  // console.log({ isMerged });
   while (!isMerged) {
     await wait(5000);
     isMerged = await isPullRequestMerged(pullNumber);
-    // console.log({ isMerged });
   }
 }
 
