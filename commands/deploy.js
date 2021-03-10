@@ -57,11 +57,9 @@ function generateTag(existingTags) {
 
 async function waitForMerge(pullNumber) {
   let isMerged = await isPullRequestMerged(pullNumber);
-  // console.log({ isMerged });
   while (!isMerged) {
     await wait(5000);
     isMerged = await isPullRequestMerged(pullNumber);
-    // console.log({ isMerged });
   }
 }
 
@@ -91,5 +89,8 @@ function withLoadingMessage(msg) {
   const spinner = new CliSpinner.Spinner(msg);
   spinner.setSpinnerString(18);
   spinner.start();
-  return () => spinner.stop();
+  return () => {
+    spinner.stop();
+    console.log('');
+  };
 }
