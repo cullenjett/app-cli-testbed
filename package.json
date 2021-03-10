@@ -5,14 +5,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "deploy": "node index.js deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@octokit/plugin-throttling": "^3.4.1",
     "@octokit/rest": "^18.1.1",
+    "cli-spinner": "^0.2.10",
     "dotenv": "^8.2.0",
-    "open": "^7.4.1"
+    "open": "^7.4.1",
+    "promptly": "^3.2.0"
   }
 }

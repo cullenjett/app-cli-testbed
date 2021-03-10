@@ -1,4 +1,6 @@
+import CliSpinner from 'cli-spinner';
 import open from 'open';
+import promptly from 'promptly';
 
 import {
   createReleasePullRequest,
@@ -8,21 +10,34 @@ import {
 } from '../lib/github.js';
 
 export const run = async () => {
+  let stopLoading = withLoadingMessage('generating tag...');
   const existingTags = await fetchTags();
   const tag = generateTag(existingTags);
-  console.log({ tag });
+  stopLoading();
 
+  const confirmTag = await promptly.confirm(
+    `Tag the release with this version? ${tag} (y/n)`
+  );
+
+  if (!confirmTag) {
+    return;
+  }
+
+  stopLoading = withLoadingMessage('creating pull request...');
   const { url, pullNumber } = await createReleasePullRequest({
     title: `[Release] ${tag}`,
     body: 'Lorem ipsum',
   });
-  console.log({ url, pullNumber });
-  open(url);
+  stopLoading();
 
+  stopLoading = withLoadingMessage('waiting for the pull request to close...');
+  open(url);
   await waitForMerge(pullNumber);
+  stopLoading();
 
   const release = await createRelease(tag);
-  console.log({ release });
+  console.log(`Release ${tag} has been cut!`);
+  console.log(release);
 };
 
 function generateTag(existingTags) {
@@ -42,11 +57,11 @@ function generateTag(existingTags) {
 
 async function waitForMerge(pullNumber) {
   let isMerged = await isPullRequestMerged(pullNumber);
-  console.log({ isMerged });
+  // console.log({ isMerged });
   while (!isMerged) {
     await wait(5000);
     isMerged = await isPullRequestMerged(pullNumber);
-    console.log({ isMerged });
+    // console.log({ isMerged });
   }
 }
 
@@ -70,4 +85,11 @@ function padZero(num) {
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function withLoadingMessage(msg) {
+  const spinner = new CliSpinner.Spinner(msg);
+  spinner.setSpinnerString(18);
+  spinner.start();
+  return () => spinner.stop();
 }
