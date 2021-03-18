@@ -26,7 +26,7 @@ export const run = async () => {
   stopLoading = withLoadingMessage('creating pull request...');
   const { url, pullNumber } = await createReleasePullRequest({
     title: `[Release] ${tag}`,
-    body: 'Lorem ipsum',
+    body: '## Summary',
   });
   stopLoading();
 
